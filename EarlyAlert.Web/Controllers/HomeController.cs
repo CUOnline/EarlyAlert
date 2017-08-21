@@ -87,7 +87,7 @@ namespace EarlyAlert.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string termId, string score, string accountId)
+        public async Task<ActionResult> Index(string termId, string score, string accountId)
         {
             if (score.IsNullOrWhiteSpace())
             {
@@ -105,9 +105,10 @@ namespace EarlyAlert.Web.Controllers
                 Courses = courses,
                 Terms = terms,
                 CurrentTerm = term,
-                CurrentAccount = account
+                CurrentAccount = account,
+                Authorized = await Authorized()
             };
-
+            
             return View(canvas);
         }
 
