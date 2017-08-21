@@ -1,0 +1,22 @@
+﻿@model EarlyAlert.Web.ViewModel.CanvasViewModel
+    
+<table id="CourseStudents" class="table table-condensed table-hover table-responsive">
+    <tr>
+        <th class="col-md-4">Student Name</th>
+        <th class="col-md-4">Student Email</th>
+        <th class="col-md-2">Current Score</th>
+        <th class="col-md-2">Final Score</th>
+    </tr>
+    @if (Model.Students != null)
+    {
+        foreach (var students in Model.Students)
+         {
+             <tr>
+                 <td class="col-md-4">@students.StudentName</td>
+                 <td class="col-md-4"><a href="mailto:@students.StudentEmail">@students.StudentEmail</a></td>
+                 <td class="col-md-2">@students.CurrentScore</td>
+                 <td class="col-md-2">@students.FinalScore</td>
+             </tr>
+         }
+    }
+</table>

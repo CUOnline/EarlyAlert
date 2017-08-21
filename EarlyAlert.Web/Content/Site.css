@@ -1,0 +1,73 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+.SubTitle {
+    font-size: 2.625rem;
+    font-weight: bold;
+    font-family: "Bitter",serif;
+    font-style: italic;
+    color: #533b6a;
+     vertical-align:top;
+}
+.inputLabel {
+    font-size: 1.625rem;
+    font-family: "Bitter",serif;
+}
+
+.inputHeader
+{
+    font-size: 1.625rem;
+    font-family: "Bitter",serif;
+    color: #0000FF;
+    background:#D0D0D0;
+}
+
+h2 {
+    font-size: 1.625rem;
+    line-height: 3rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    color: #533b6a;
+    font-family: "Bitter",serif;
+    margin: .75rem 0;
+    text-align: center;
+}
+
+h2 span {
+    color: #7b8c37;
+    background: #5396ac;   
+}
+
+.linkbutton {
+    background-color:transparent;
+    color: #999999;
+    border: none;
+    cursor:pointer;
+    text-decoration:none;
+    padding: 15px 0 15px 0;
+}
+
+.linkbutton:hover{
+    color: white;
+}

@@ -1,0 +1,23 @@
+﻿@model EarlyAlert.Web.ViewModel.CanvasViewModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+<br />
+<br />
+<br />
+
+
+@if (Model.Authorized)
+{
+    Html.RenderPartial("_CoursesPartial");
+}
+else
+{
+    <div class="alert alert-info" role="alert">
+        Please Sign In.
+    </div>
+}
+
+
+

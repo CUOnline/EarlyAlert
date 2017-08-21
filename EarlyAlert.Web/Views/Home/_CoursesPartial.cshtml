@@ -1,0 +1,88 @@
+﻿@model EarlyAlert.Web.ViewModel.CanvasViewModel
+
+<div class="SubTitle">
+    Early Alert For Advisors : @Model.CurrentAccount.Name
+</div>
+<br />
+
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        <div class="row inputLabel">
+            <div class="col-md-3">
+                Select Term: @Html.DropDownListFor(model => model.CurrentTerm.Id, Model.Terms.Select(m => new SelectListItem { Text = m.Name, Value = m.Id }), new { style = "width:120px", id = "Termdropdown" })
+            </div>
+            <div class="col-md-3">
+                Alert Score : @Html.TextBox("score", (string)ViewBag.score, new { style = "width:60px", id = "minScore" }) @Html.Hidden("termId", (string)ViewBag.term, new { id = "hiddenval" })@Html.Hidden("accountId", Model.CurrentAccount.Id, new { id = "accountId" })
+            </div>
+            <div class="col-md-2 left">
+                <input type="submit" value="Lookup Students" class="btn btn-sm btn-primary" />
+            </div>
+            <div class="col-md-4">
+                There are a total of @Model.Courses.Count.ToString() courses.
+            </div>
+        </div>
+    }
+    <br />
+    <div class="panel ">
+        <div class="table table-condensed table-responsive">
+
+            @foreach (var course in Model.Courses)
+            {
+
+                <div id="CanvasCourses" class="row inputHeader">
+                    <div class="col-md-5">
+                        <a data-toggle="collapse" data-target="#collapseOne_@course.Id">
+                            <i id="toggleOne_@course.Id" data-url='@Url.Action("GetStudents","Home", new { id = @course.Id, score= "xxxx", accountId = Model.CurrentAccount.Id } )' class="btn btn-xs glyphicon glyphicon-chevron-down"></i> @course.Name
+                        </a>
+                    </div>
+                    <div class="col-md-5 ">
+                        <a href='@string.Format("https://ucdenver.instructure.com/courses/{0}", course.CanvasId)'>@string.Format("https://ucdenver.instructure.com/courses/{0}", course.CanvasId) </a>
+                    </div>
+                    <div class="col-md-2 ">
+                        <div id="students_@course.Id" class="label-danger">loading....</div>
+                    </div>
+                </div>
+                <br />
+                <div id="collapseOne_@course.Id" class="panel-collapse collapse">
+                    <div id="detailsDiv_@course.Id">
+                        @{Html.RenderPartial("_StudentsView");}
+                    </div>
+                </div>
+                            }
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#CanvasCourses i').each(function (i, tr) {
+
+            var value = this.id;
+            var score = $('#minScore').val();
+            var url = $(this).data('url').replace("xxxx", score);
+            var courseId = value.split('_')[1];
+            $.get(url,
+               function (data) {
+                   $('#detailsDiv_' + courseId).replaceWith(data);
+                   var studenttable = $('#collapseOne_' + courseId + ' .table tr').length - 1;
+                   $('#students_' + courseId).html(studenttable + " students").removeClass("label-danger");
+               });
+        });
+
+        $('#Termdropdown').change(function() {
+            var term = $(this).val();
+            $('#hiddenval').val(term);
+        });
+
+        $('.glyphicon').click(function () {
+            $(this).toggleClass("glyphicon-chevron-down").toggleClass("glyphicon-chevron-up");
+            $('#toggleDetails').toggleClass("show");
+        });
+
+    });
+
+</script>
