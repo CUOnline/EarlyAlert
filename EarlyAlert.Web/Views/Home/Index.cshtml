@@ -14,9 +14,18 @@
 }
 else
 {
-    <div class="alert alert-info" role="alert">
-        Please Sign In.
-    </div>
+    if (ViewBag.error == null)
+    {
+        <div class="alert alert-info" role="alert">
+            Please Sign In.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.error
+        </div>
+    }
 }
 
 

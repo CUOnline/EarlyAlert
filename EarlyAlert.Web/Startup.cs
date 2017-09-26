@@ -1,4 +1,5 @@
-﻿using EarlyAlert.Web;
+﻿using Canvas.Clients;
+using EarlyAlert.Web;
 using Microsoft.Owin;
 using Owin;
 
