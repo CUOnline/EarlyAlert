@@ -88,32 +88,13 @@ namespace EarlyAlert.Web.Providers.Canvas
                 var refreshToken = (string)response.refresh_token;
                 var user = (JObject)response.user;
 
-                // Get user roles
-                var rolesRequest = new HttpRequestMessage(HttpMethod.Get, Options.Endpoints.UserRolesEndpoint + "?access_token=" + Uri.EscapeDataString(accessToken));
-                var rolesResponse = await _httpClient.SendAsync(rolesRequest, Request.CallCancelled);
-
-                var roles = new JArray();
-                if (rolesResponse.IsSuccessStatusCode)
-                {
-                    text = await rolesResponse.Content.ReadAsStringAsync();
-                    roles = JArray.Parse(text);
-                }
-
-                var context = new CanvasAuthenticatedContext(Context, user, roles, accessToken, refreshToken)
+                var context = new CanvasAuthenticatedContext(Context, user, accessToken, refreshToken)
                 {
                     Identity = new ClaimsIdentity(
                         Options.AuthenticationType,
                         ClaimsIdentity.DefaultNameClaimType,
                         ClaimsIdentity.DefaultRoleClaimType)
                 };
-
-                if (context.Roles != null)
-                {
-                    foreach (var role in context.Roles)
-                    {
-                        context.Identity.AddClaim(new Claim(ClaimTypes.Role, role, XmlSchemaString, Options.AuthenticationType));
-                    }
-                }
 
                 if (!string.IsNullOrEmpty(context.Id))
                 {

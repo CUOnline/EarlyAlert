@@ -20,16 +20,10 @@ namespace EarlyAlert.Web.Providers.Canvas
             /// Endpoint which is used to exchange code for access token
             /// </summary>
             public string TokenEndpoint { get; set; }
-
-            /// <summary>
-            /// Endpoint which is used to obtain user roles after authentication
-            /// </summary>
-            public string UserRolesEndpoint { get; set; }
         }
 
         private const string AuthorizationEndPoint = "";
         private const string TokenEndpoint = "";
-        private const string UserRolesEndpoint = "";
 
         /// <summary>
         ///     Gets or sets the a pinned certificate validator to use to validate the endpoints used
@@ -118,8 +112,7 @@ namespace EarlyAlert.Web.Providers.Canvas
             Endpoints = new CanvasAuthenticationEndpoints
             {
                 AuthorizationEndpoint = AuthorizationEndPoint,
-                TokenEndpoint = TokenEndpoint,
-                UserRolesEndpoint = UserRolesEndpoint
+                TokenEndpoint = TokenEndpoint
             };
         }
     }

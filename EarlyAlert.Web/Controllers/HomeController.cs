@@ -11,6 +11,9 @@ using EarlyAlert.Web.ViewModel;
 using EarlyAlert.Model;
 using Microsoft.Ajax.Utilities;
 using System.Collections.Generic;
+using Canvas.Clients;
+using Canvas.Clients.Models.Enums;
+using System;
 
 namespace EarlyAlert.Web.Controllers
 {
@@ -47,10 +50,11 @@ namespace EarlyAlert.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            if (await Authorized())
+            ViewBag.authenticated = false;
+            string id = "10430000000000016";
+
+            if (await Authorized(id))
             {
-                ViewBag.authorized = true;
-                string id = "10430000000000016";
                 ViewBag.score = ConfigurationManager.AppSettings["AlertScore"];
                 var account = accountBll.GetAccount(id);
                 var courses = courseBll.GetInitialCourses(ConfigurationManager.AppSettings["AlertScore"], account.Id);
@@ -89,6 +93,8 @@ namespace EarlyAlert.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Index(string termId, string score, string accountId)
         {
+            ViewBag.authenticated = false;
+
             if (score.IsNullOrWhiteSpace())
             {
                 score = ConfigurationManager.AppSettings["AlertScore"];
@@ -106,7 +112,7 @@ namespace EarlyAlert.Web.Controllers
                 Terms = terms,
                 CurrentTerm = term,
                 CurrentAccount = account,
-                Authorized = await Authorized()
+                Authorized = await Authorized(accountId)
             };
             
             return View(canvas);
@@ -138,24 +144,34 @@ namespace EarlyAlert.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        private async Task<bool> Authorized()
+        private async Task<bool> Authorized(string accountId)
         {
-            List<string> authorizedRoles = new List<string>()
+            List<RoleNames> authorizedRoles = new List<RoleNames>()
             {
-                "Account Admin",
-                "Enrollment Manager",
-                "Help Desk",
-                "Outcomes Admin",
-                "Sub-Account Admin"
+                RoleNames.AccountAdmin,
+                RoleNames.EnrollmentManager,
+                RoleNames.HelpDesk,
+                RoleNames.OutcomesAdmin,
+                RoleNames.SubAccountAdmin,
             };
 
             var authenticateResult = await HttpContext.GetOwinContext().Authentication.AuthenticateAsync("ExternalCookie");
             if (authenticateResult != null)
             {
-                var tokenClaim = authenticateResult.Identity.Claims.Where(cl => cl.Type == ClaimTypes.Role && authorizedRoles.Contains(cl.Value)).Any();// .FirstOrDefault(claim => claim.Type == "urn:token:github");
-                if (tokenClaim)
+                ViewBag.authenticated = true;
+                AccountsClient client = new AccountsClient();
+                var userId = authenticateResult.Identity.Claims.Where(cl => cl.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value;
+
+                var roles = (await client.GetAccountRolesForUserAsync(accountId, userId)).Where(x => x.WorkflowState == WorkflowState.Active);
+
+                if(roles.Select(x => x.Name).Intersect(authorizedRoles).Any())
                 {
                     return true;
+                }
+                else
+                {
+                    var account = await client.Get<Account>(accountId);
+                    ViewBag.error = $"You do not have the proper roles assigned to access information for {account.Name}";
                 }
             }
 

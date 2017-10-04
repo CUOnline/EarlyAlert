@@ -28,7 +28,7 @@
 
                     <li></li>
                     <li>
-                        @if (Model.Authorized)
+                        @if (ViewBag.authenticated)
                         {
                             var canvasProvider = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes().FirstOrDefault();
                             using (Html.BeginForm("ExternalLogout", "Home"))

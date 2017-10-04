@@ -23,19 +23,13 @@ namespace EarlyAlert.Web.Providers.Canvas.Provider
         /// <param name="accessToken">Canvas Access token</param>
         /// <param name="refreshToken">Canvas Refresh token</param>
         /// <param name="instanceUrl">Canvas instance url</param>
-        public CanvasAuthenticatedContext(IOwinContext context, JObject user, JArray roles, string accessToken, string refreshToken)
+        public CanvasAuthenticatedContext(IOwinContext context, JObject user, string accessToken, string refreshToken)
             : base(context)
         {
             AccessToken = accessToken;
             RefreshToken = refreshToken;
             Id = TryGetValue(user, "id");
             UserName = TryGetValue(user, "name");
-
-            Roles = new List<string>();
-            foreach (var role in roles)
-            {
-                Roles.Add(role["role"].Value<string>());
-            }
         }
 
         /// <summary>

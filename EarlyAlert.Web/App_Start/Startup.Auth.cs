@@ -29,8 +29,7 @@ namespace EarlyAlert.Web
                     new CanvasAuthenticationOptions.CanvasAuthenticationEndpoints()
                     {
                         AuthorizationEndpoint = baseUrl + "login/oauth2/auth",
-                        TokenEndpoint = baseUrl + "login/oauth2/token",
-                        UserRolesEndpoint = baseUrl + "api/v1/accounts/self/roles"
+                        TokenEndpoint = baseUrl + "login/oauth2/token"
                     },
                 ClientId = ConfigurationManager.AppSettings["ClientId"],
                 ClientKey = ConfigurationManager.AppSettings["ClientKey"]
